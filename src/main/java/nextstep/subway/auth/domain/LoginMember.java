@@ -1,38 +1,25 @@
 package nextstep.subway.auth.domain;
 
 import java.util.Objects;
+import java.util.Optional;
 import nextstep.subway.path.domain.DiscountStrategy;
 
 public class LoginMember implements User {
 
-    private Long id;
-    private String email;
-    private Integer age;
-
-    private LoginMember() {
-
-    }
+    private final UserProperty userProperty;
 
     public LoginMember(Long id, String email, Integer age) {
-        this.id = id;
-        this.email = email;
-        this.age = age;
+        this.userProperty = new UserProperty(id, email, age);
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public Optional<UserProperty> getUserProperty() {
+        return Optional.of(userProperty);
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
+    @Override
     public DiscountStrategy getDiscountStrategy() {
-        return DiscountStrategy.of(age);
+        return DiscountStrategy.of(userProperty.getAge());
     }
 
     @Override
@@ -44,12 +31,11 @@ public class LoginMember implements User {
             return false;
         }
         LoginMember that = (LoginMember) o;
-        return Objects.equals(id, that.id) && Objects.equals(email, that.email)
-            && Objects.equals(age, that.age);
+        return Objects.equals(userProperty, that.userProperty);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, age);
+        return Objects.hash(userProperty);
     }
 }

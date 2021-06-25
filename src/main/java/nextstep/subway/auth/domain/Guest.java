@@ -1,7 +1,7 @@
 package nextstep.subway.auth.domain;
 
+import java.util.Optional;
 import nextstep.subway.path.domain.DiscountStrategy;
-import nextstep.subway.path.domain.NoDiscountStrategy;
 
 public class Guest implements User {
 
@@ -14,22 +14,12 @@ public class Guest implements User {
     }
 
     @Override
-    public Long getId() {
-        return 0L;
-    }
-
-    @Override
-    public String getEmail() {
-        return "";
-    }
-
-    @Override
-    public Integer getAge() {
-        return 0;
+    public Optional<UserProperty> getUserProperty() {
+        return Optional.empty();
     }
 
     @Override
     public DiscountStrategy getDiscountStrategy() {
-        return new NoDiscountStrategy();
+        return DiscountStrategy.of(0);
     }
 }

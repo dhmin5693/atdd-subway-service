@@ -3,6 +3,7 @@ package nextstep.subway.member.ui;
 import java.net.URI;
 import nextstep.subway.auth.domain.StringAuthPrincipal;
 import nextstep.subway.auth.domain.User;
+import nextstep.subway.auth.domain.UserProperty;
 import nextstep.subway.member.application.MemberService;
 import nextstep.subway.member.dto.MemberRequest;
 import nextstep.subway.member.dto.MemberResponse;
@@ -49,20 +50,26 @@ public class MemberController {
 
     @GetMapping("/members/me")
     public ResponseEntity<MemberResponse> findMemberOfMine(@StringAuthPrincipal User user) {
-        MemberResponse member = memberService.findMember(user.getId());
+        MemberResponse member = memberService.findMember(getId(user));
         return ResponseEntity.ok().body(member);
     }
 
     @PutMapping("/members/me")
     public ResponseEntity<Void> updateMemberOfMine(@StringAuthPrincipal User user,
                                                    @RequestBody MemberRequest param) {
-        memberService.updateMember(user.getId(), param);
+        memberService.updateMember(getId(user), param);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/members/me")
     public ResponseEntity<Void> deleteMemberOfMine(@StringAuthPrincipal User user) {
-        memberService.deleteMember(user.getId());
+        memberService.deleteMember(getId(user));
         return ResponseEntity.noContent().build();
+    }
+
+    private Long getId(User user) {
+        return user.getUserProperty()
+                   .orElseGet(UserProperty::new)
+                   .getId();
     }
 }
